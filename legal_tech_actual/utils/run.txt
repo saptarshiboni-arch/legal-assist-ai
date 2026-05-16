@@ -1,0 +1,2 @@
+cd c:\legal_tech\legal-ai
+uvicorn main:app --reload

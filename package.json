@@ -1,0 +1,15 @@
+{
+  "name": "lexai-root",
+  "version": "1.0.0",
+  "description": "Root controller for LexAI (MERN + Legal Tech)",
+  "main": "index.js",
+  "scripts": {
+    "dev:server": "npm run dev --prefix mern-auth/server",
+    "dev:client": "npm run dev --prefix mern-auth/client",
+    "dev:python": "cd legal_tech_actual && python -m uvicorn main:app --reload --port 8000",
+    "start": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:python\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
