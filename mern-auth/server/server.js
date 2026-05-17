@@ -21,7 +21,13 @@ const allowedOrigins = [
   'http://localhost:5179'
 ].filter(Boolean);
 
+console.log('=== CORS DEBUG LOGS ===');
+console.log('process.env.CLIENT_URL:', process.env.CLIENT_URL);
+console.log('allowedOrigins loaded:', allowedOrigins);
+console.log('=======================');
+
 app.use(cookieParser());
+
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
