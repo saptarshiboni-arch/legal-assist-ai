@@ -38,7 +38,8 @@ const LegalTech = () => {
   }, [isLoggedin, navigate]);
 
   // API Base URL - adjust according to your setup
-  const LEGAL_TECH_API = "http://localhost:8000";
+  const LEGAL_TECH_API = import.meta.env.VITE_LEGAL_TECH_API_URL || "http://localhost:8000";
+
 
   // ─── Theme Toggle ─────────────────────
   const toggleTheme = () => {

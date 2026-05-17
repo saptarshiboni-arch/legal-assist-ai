@@ -19,23 +19,17 @@ from utils.chatbot import ask_chatbot, ask_general_chatbot
 
 app = FastAPI(title="Legal Contract Analyzer API")
 
-# ─── CORS Configuration ──────────────────────
-# Allow requests from MERN frontend
+# Fetch allowed origins from environment variable, falling back to local configurations
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Vite dev server
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://localhost:3000",  # Common React dev server
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
