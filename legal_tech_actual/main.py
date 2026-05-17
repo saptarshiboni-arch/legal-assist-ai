@@ -39,6 +39,9 @@ os.makedirs("uploads", exist_ok=True)
 # In-memory store: document_id -> extracted text
 document_store: dict[str, str] = {}
 
+# In-memory store: document_id -> analysis results (for chatbot context)
+analysis_store: dict[str, dict] = {}
+
 ALLOWED_EXTENSIONS = ('.pdf', '.docx', '.jpg', '.jpeg', '.png')
 
 
@@ -115,6 +118,8 @@ async def analyze(req: AnalyzeRequest):
     text = document_store[req.document_id]
     try:
         result = analyze_contract(text)
+        # Cache analysis results so chatbot can reference them
+        analysis_store[req.document_id] = result
         return result
     except ValueError as e:
         return JSONResponse(status_code=422, content={"error": str(e)})
@@ -131,7 +136,8 @@ async def chat(req: ChatRequest):
     text = document_store[req.document_id]
     try:
         history_dicts = [{"role": m.role, "content": m.content} for m in (req.history or [])]
-        response_text = ask_chatbot(text, req.question, history_dicts)
+        analysis_context = analysis_store.get(req.document_id, None)
+        response_text = ask_chatbot(text, req.question, history_dicts, analysis_context=analysis_context)
         return {"response": response_text}
     except Exception as e:
         traceback.print_exc()
